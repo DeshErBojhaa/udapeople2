@@ -70,8 +70,13 @@ jobs:
                       npm i
                       npm run build
             - save_cache:
-                  paths: [backend/node_modules]
+                  paths:
+                      - backend/node_modules
                   key: backend-build
+            - save_cache:
+                  paths:
+                      - "backend/dist"
+                  key: backend-dist
             - slack/notify:
                   event: fail
                   template: basic_fail_1
@@ -86,7 +91,7 @@ jobs:
             # Restore from cache
             - restore_cache:
                   keys:
-                      - "frontend-build"
+                      - frontend-build
             # Your job code here
             - run:
                   name: Frontend test
@@ -109,7 +114,7 @@ jobs:
             # Restore from cache
             - restore_cache:
                   keys:
-                      - backend-build""
+                      - backend-build
             # Your job code here
             - run:
                   name: Backend test
@@ -130,7 +135,15 @@ jobs:
             # Checkout code from git
             - checkout
             # Restore from cache
+            - restore_cache:
+                  - keys:
+                        - frontend-build
             # Your job code here
+            - run:
+                  name: Frontend security scan
+                  command: |
+                      cd frontend
+                      npm audit --audit-level=critical
             - slack/notify:
                   event: fail
                   template: basic_fail_1
@@ -140,13 +153,21 @@ jobs:
 
     scan-backend:
         docker:
-            - image: afjlajflajf
+            - image: circleci/node:13.8.0
             # Docker image here
         steps:
-            - checkout
             # Checkout code from git
+            - checkout
             # Restore from cache
+            - restore_cache:
+                  keys:
+                      - backend-build
             # Your job code here
+            - run:
+                  name: Backend security check
+                  command: |
+                      cd backend
+                      npm audit --audit-level=critical
             - slack/notify:
                   event: fail
                   template: basic_fail_1
