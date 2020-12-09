@@ -233,8 +233,8 @@ jobs:
 
     configure-infrastructure:
         docker:
-            - image: python:3.7-alpine3.11
             # Docker image here that supports Ansible
+            - image: python:3.7-alpine3.11
         steps:
             - checkout
             # Add ssh keys with fingerprint
@@ -249,7 +249,6 @@ jobs:
                   command: |
                       # Your code here
                       apk add --update ansible curl nodejs npm
-                    #   pip3 install awscli
                       echo "Ansible inventories >> Requires for the next job"
                       cat .circleci/ansible/inventory.txt
             - aws-cli/setup
