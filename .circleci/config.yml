@@ -21,7 +21,7 @@ commands:
                       aws cloudformation delete-stack \
                           --stack-name "backend-stack-<< parameters.workflow-id >>"
                       aws cloudformation delete-stack \
-                          --stack-name "udapeople-frontend-<< parameters.workflow-id >>"
+                          --stack-name "frontend-stack-<< parameters.workflow-id >>"
 
     revert-migrations:
         description: Revert the last migration if successfully run in the current workflow.
@@ -189,7 +189,7 @@ jobs:
     deploy-infrastructure:
         docker:
             # Docker image here that supports AWS CLI
-            - image: amazon/aws-cli
+            - image: cimg/base:2020.01
         steps:
             # Checkout code from git
             - checkout

@@ -30,13 +30,18 @@ Resources:
             KeyName: udapeople
             ImageId: ami-07dd19a7900a1f049 # Ubuntu 20
             InstanceType: t2.micro
-            SubnetId: subnet-034e2799250c6b582
             Monitoring: true
-            SecurityGroupIds:
-                - !Ref InstanceSecurityGroup
+            # SecurityGroupIds:
+            #     - !Ref InstanceSecurityGroup
             UserData: !Base64 |
                 #!/bin/bash -ex
                 # put your script here
             Tags:
                 - Key: Name
                   Value: !Sub backend-${ID}
+            NetworkInterfaces:
+                - AssociatePublicIpAddress: true
+                  DeviceIndex: "0"
+                  SubnetId: subnet-034e2799250c6b582
+                  GroupSet:
+                      - !Ref InstanceSecurityGroup
