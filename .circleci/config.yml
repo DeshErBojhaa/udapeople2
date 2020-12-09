@@ -443,7 +443,7 @@ jobs:
                   command: |
                       apk add --update py3-pip && pip3 install --upgrade pip && pip3 install awscli
             # Here's where you will add some code to rollback on failure
-            - revert-migrassions
+            - revert-migrations
             - destroy-environment
 
     cloudfront-update:
