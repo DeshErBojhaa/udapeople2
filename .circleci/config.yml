@@ -237,7 +237,6 @@ jobs:
             # Docker image here that supports Ansible
         steps:
             - checkout
-            - aws-cli/setup
             # Add ssh keys with fingerprint
             - add_ssh_keys:
                   fingerprints:
@@ -249,9 +248,11 @@ jobs:
                   name: Install dependencies
                   command: |
                       # Your code here
-                      apk add --update ansible
+                      apk add --update ansible curl nodejs npm
+                    #   pip3 install awscli
                       echo "Ansible inventories >> Requires for the next job"
                       cat .circleci/ansible/inventory.txt
+            - aws-cli/setup
             - run:
                   name: Configure server
                   no_output_timeout: 10m
