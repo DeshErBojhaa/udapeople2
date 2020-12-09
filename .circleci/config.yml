@@ -253,7 +253,7 @@ jobs:
                       cat .circleci/ansible/inventory.txt
             - run:
                   name: Configure server
-                  no_output_timeout: 11m
+                  no_output_timeout: 15m
                   command: |
                         echo ENVIROMENT=development > "backend/.env"
                         echo TYPEORM_CONNECTION=postgres >> "backend/.env"
