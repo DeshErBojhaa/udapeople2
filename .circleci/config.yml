@@ -77,9 +77,8 @@ jobs:
                       cd backend
                       npm i
                       npm run build
-                      npm run migrations:revert # Force reverting migration
+                      nrm run migrations:revert
                       exit 1
-
             - save_cache:
                   paths:
                       - backend/node_modules
@@ -466,7 +465,7 @@ jobs:
                       # your code here
                       exit 1
             # Here's where you will add some code to rollback on failure
-            - revert-migrassions
+            - revert-migrations
             - destroy-environment
 
     cleanup:
