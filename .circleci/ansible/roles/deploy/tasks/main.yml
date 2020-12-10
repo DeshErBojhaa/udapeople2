@@ -5,6 +5,7 @@
       dest: /home/ubuntu
 
 - name: Install Node modules
+  become: true
   shell: |
       cd /home/ubuntu/backend
       ls -la
@@ -12,12 +13,14 @@
       npm install
 
 - name: building node services
+  become: true
   shell: |
       cd /home/ubuntu/backend
       npm run build
       npm run prestart:prod
 
 - name: "run migrations again"
+  become: true
   shell: |
       cd /home/ubuntu/backend
       npm run migrations
