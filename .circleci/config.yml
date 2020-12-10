@@ -412,9 +412,20 @@ jobs:
                   name: Backend smoke test.
                   command: |
                       # your code here
-                      echo "Printing Backedn Url"
+                      echo "Printing Backend Url"
+                      echo $(sed -n 2p .circleci/ansible/inventory.txt)
                       echo $BACKEND_URL
+                      echo ${BACKEND_URL}
+                      curl -s https://$(sed -n 2p .circleci/ansible/inventory.txt):3030/api/status
                       curl -s https://${BACKEND_URL}:3030/api/status
+                      echo "Quering Aws for backend url"
+                      XX=$(aws ec2 describe-instances \
+                      --filters "Name=tag:Name, Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+                      --query 'Reservations[*].Instances[*].PublicDnsName' \
+                      --output text)
+                      echo ${XX}
+                      echo $XX
+                      curl -s https://${XX}:3030/api/status
                       if curl -s https://${BACKEND_URL}:3030/api/status
                       then
                         exit 0
@@ -434,7 +445,7 @@ jobs:
                       fi
             # Here's where you will add some code to rollback on failure
             - revert-migrations
-            - destroy-environment
+            #- destroy-environment
 
     cloudfront-update:
         docker:
