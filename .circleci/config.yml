@@ -290,7 +290,7 @@ jobs:
             - run:
                   name: Run migrations
                   command: |
-                      # Your code here
+                      # Your code here check later
                       cd backend
                       npm run migrations > migration.log
                       migration_status=$(cat migration.log | grep -c "has been executed successfully")
