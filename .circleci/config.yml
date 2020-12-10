@@ -404,12 +404,6 @@ jobs:
             - attach_workspace:
                   at: ~/
             - run:
-                  name: Install dependencies
-                  command: |
-                      # your code here
-                      command: |
-                          apk add --update curl
-            - run:
                   name: Get backend url
                   command: |
                       # your code here
