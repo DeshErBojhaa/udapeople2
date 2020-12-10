@@ -24,6 +24,25 @@ commands:
                       aws cloudformation delete-stack \
                           --stack-name "frontend-stack-<< parameters.workflow-id >>"
 
+    write-env-variables:
+        description: Writes environment variables to env file
+            steps:
+                - run:
+                    name: Write to .env file
+                    command: |
+                        ls -la
+                        echo ENVIROMENT=development > "backend/.env"
+                        echo TYPEORM_CONNECTION=postgres >> "backend/.env"
+                        echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> "backend/.env"
+                        echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> "backend/.env"
+                        echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> "backend/.env"
+                        echo TYPEORM_HOST=$TYPEORM_HOST >> "backend/.env"
+                        echo TYPEORM_PORT=$TYPEORM_PORT >> "backend/.env"
+                        echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> "backend/.env"
+                        echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
+                        echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
+
+
     revert-migrations:
         description: Revert the last migration if successfully run in the current workflow.
         # parameters:
@@ -251,21 +270,13 @@ jobs:
                       apk add --update ansible
                       echo "Ansible inventories >> Requires for the next job"
                       cat .circleci/ansible/inventory.txt
+            - write-env-variables
             - run:
                   name: Configure server
                   no_output_timeout: 15m
                   command: |
-                      echo ENVIROMENT=development > "backend/.env"
-                      echo TYPEORM_CONNECTION=postgres >> "backend/.env"
-                      echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> "backend/.env"
-                      echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> "backend/.env"
-                      echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> "backend/.env"
-                      echo TYPEORM_HOST=$TYPEORM_HOST >> "backend/.env"
-                      echo TYPEORM_PORT=$TYPEORM_PORT >> "backend/.env"
-                      echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> "backend/.env"
-                      echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
-                      echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
-
+                      echo "Print directory"
+                      ls -la
                       ansible-playbook -i .circleci/ansible/inventory.txt \
                       .circleci/ansible/configure-server.yml
             # Here's where you will add some code to rollback on failure
@@ -368,18 +379,13 @@ jobs:
             - restore_cache:
                   keys:
                       - "backend-dist"
+            - write-env-variables
             - run:
                   name: Deploy backend
                   command: |
-                      # your code here
-                      cd /home
-                      tar czf backend.tar.gz -P /home/circleci/project/backend/dist
-            - run:
-                  name: Deploy backend 2
-                  command: |
+                      no_output_timeout: 30m
                       export ANSIBLE_HOST_KEY_CHECKING=False
-                      ansible-playbook \
-                      -i .circleci/ansible/inventory.txt \
+                      ansible-playbook -i .circleci/ansible/inventory.txt \
                       .circleci/ansible/deploy-backend.yml
             - run:
                   name: Install AWS CLI for rollback
