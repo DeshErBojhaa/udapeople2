@@ -393,10 +393,11 @@ jobs:
     smoke-test:
         docker:
             # Lightweight Docker image
-            - image: python:3.7-alpine3.11
+            - image: circleci/node:13.8.0
         steps:
             # Checkout code from git
             - checkout
+            - aws-cli/setup
             - add_ssh_keys:
                   fingerprints:
                       - "ac:5c:72:b4:ce:18:74:3c:ac:63:db:7b:da:ea:e4:c5"
@@ -408,7 +409,6 @@ jobs:
                       # your code here
                       command: |
                           apk add --update curl
-
             - run:
                   name: Get backend url
                   command: |
@@ -437,11 +437,6 @@ jobs:
                           else
                           return 0
                           fi
-            - run:
-                  name: Install AWS CLI for rollback
-                  when: on_fail
-                  command: |
-                      apk add --update py3-pip && pip3 install --upgrade pip && pip3 install awscli
             # Here's where you will add some code to rollback on failure
             - revert-migrations
             - destroy-environment
