@@ -77,6 +77,9 @@ jobs:
                       cd backend
                       npm i
                       npm run build
+                      npm run migrations:revert # Force reverting migration
+                      exit 1
+
             - save_cache:
                   paths:
                       - backend/node_modules
@@ -461,7 +464,10 @@ jobs:
                   name: Update cloudfront distribution
                   command: |
                       # your code here
+                      exit 1
             # Here's where you will add some code to rollback on failure
+            - revert-migrassions
+            - destroy-environment
 
     cleanup:
         docker:
