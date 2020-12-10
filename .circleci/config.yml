@@ -327,7 +327,7 @@ jobs:
                   command: |
                       # your code here
                       export BACKEND_IP=$(sed -n 2p .circleci/ansible/inventory.txt)
-                      export API_URL="http://${BACKEND_IP}:3030"
+                      export API_URL="http://$(sed -n 2p .circleci/ansible/inventory.txt):3030"
                       echo "${API_URL}"
                       echo ENVIRONMENT=production > "frontend/.env"
                       echo NODE_ENV=production >> "frontend/.env"
@@ -523,3 +523,7 @@ workflows:
                   requires: [smoke-test]
             - cleanup:
                   requires: [cloudfront-update]
+
+# Env variables not set in prod machine
+# Builds are not properly deployed
+# Thus can not run the application
