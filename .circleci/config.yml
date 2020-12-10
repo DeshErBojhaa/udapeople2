@@ -412,6 +412,9 @@ jobs:
                   name: Backend smoke test.
                   command: |
                       # your code here
+                      echo "Printing Backedn Url"
+                      echo $BACKEND_URL
+                      curl -s https://${BACKEND_URL}:3030/api/status
                       if curl -s https://${BACKEND_URL}:3030/api/status
                       then
                         exit 0
