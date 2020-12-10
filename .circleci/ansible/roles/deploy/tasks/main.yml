@@ -1,13 +1,12 @@
 - name: Copy backend code to remote server
   become: true
   copy:
-      src: /root/project/dddd.tar.gz
+      src: /root/project/backend
       dest: /home/ubuntu
 
 - name: Install Node modules
   become: true
   shell: |
-      tar xfzv /home/ubuntu/dddd.tar.gz .
       cd /home/ubuntu/backend
       ls -la
       printenv
