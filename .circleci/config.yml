@@ -77,8 +77,6 @@ jobs:
                       cd backend
                       npm i
                       npm run build
-                      nrm run migrations:revert
-                      exit 1
             - save_cache:
                   paths:
                       - backend/node_modules
