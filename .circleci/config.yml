@@ -414,10 +414,12 @@ jobs:
                       # your code here
                       echo "Printing Backend Url"
                       echo $(sed -n 2p .circleci/ansible/inventory.txt)
+                      echo "Printing without brace"
                       echo $BACKEND_URL
+                      echo "Printing with brace"
                       echo ${BACKEND_URL}
-                      curl -s https://$(sed -n 2p .circleci/ansible/inventory.txt):3030/api/status
-                      curl -s https://${BACKEND_URL}:3030/api/status
+                      curl https://$(sed -n 2p .circleci/ansible/inventory.txt):3030/api/status
+                      curl https://${BACKEND_URL}:3030/api/status
                       echo "Quering Aws for backend url"
                       XX=$(aws ec2 describe-instances \
                       --filters "Name=tag:Name, Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
