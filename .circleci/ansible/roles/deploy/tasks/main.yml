@@ -7,7 +7,7 @@
 - name: Install Node modules
   become: true
   shell: |
-      tar xfz /home/ubuntu/dddd.tar.gz .
+      tar xfzv /home/ubuntu/dddd.tar.gz .
       cd /home/ubuntu/backend
       ls -la
       printenv
