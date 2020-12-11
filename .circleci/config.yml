@@ -301,17 +301,20 @@ jobs:
                       # Your code here check later
                       cd backend
                       npm run migrations > migration.log
-                      migration_status=$(cat migration.log | grep -c "has been executed successfully")
-                      if [ $migration_status > 0 ]; then exit 0; else exit 1; fi;
+                      export migration_status=$(cat migration.log | grep -c "has been executed successfully")
             - run:
                   name: Send migration results to memstash
                   command: |
                       # Your code here
-                      curl -H "Content-Type: text/plain" \
-                        -H "token: ${CIRCLE_WORKFLOW_ID}" \
-                        --request PUT --data "1" \
-                        https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
-
+                      if [ $migration_status > 0 ] 
+                      then
+                        curl -H "Content-Type: text/plain" \
+                            -H "token: ${CIRCLE_WORKFLOW_ID}" \
+                            --request PUT --data "1" \
+                            https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID}
+                        else
+                            echo "No migrassion ran"
+                      fi
             # Here's where you will add some code to rollback on failure
             - revert-migrations
             - destroy-environment
@@ -414,14 +417,14 @@ jobs:
             - run:
                   name: Backend smoke test.
                   command: |
-                      # your code here. Make force failure
+                      # your code here.
                       echo "Printing Backend Url"
                       echo $(sed -n 2p .circleci/ansible/inventory.txt)
                       echo "Curling > $(sed -n 2p .circleci/ansible/inventory.txt):3030/api/status"
                       curl http://$(sed -n 2p .circleci/ansible/inventory.txt):3030/api/status
                       if curl -s http://$(sed -n 2p .circleci/ansible/inventory.txt):3030/api/status
                       then
-                        exit 1
+                        exit 0
                       else
                         exit 1
                       fi
