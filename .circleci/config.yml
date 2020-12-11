@@ -482,8 +482,8 @@ jobs:
                       https://api.memstash.io/values/persist_workflow_id)
                       export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
                       --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
-                      echo "Old id >>${OldWorkflowID}<<"
-                      echo "New id >>${CIRCLE_WORKFLOW_ID:0:7}<<"
+                      echo "Old id ${OldWorkflowID}"
+                      echo "New id ${CIRCLE_WORKFLOW_ID:0:7}"
                       echo ${STACKS}
             - run:
                   name: Save current workflow id
