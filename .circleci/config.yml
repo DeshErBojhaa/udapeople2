@@ -421,7 +421,7 @@ jobs:
                       curl http://$(sed -n 2p .circleci/ansible/inventory.txt):3030/api/status
                       if curl -s http://$(sed -n 2p .circleci/ansible/inventory.txt):3030/api/status
                       then
-                        exit 0
+                        exit 1
                       else
                         exit 1
                       fi
