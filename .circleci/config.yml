@@ -327,6 +327,9 @@ jobs:
             # Checkout code from git
             - checkout
             - aws-cli/setup
+            # attach workspace
+            - attach_workspace:
+                  at: ~/
             - run:
                   name: Install dependencies
                   command: |
@@ -343,6 +346,7 @@ jobs:
                       echo NODE_ENV=production >> "frontend/.env"
                       echo API_URL=http://$(sed -n 2p .circleci/ansible/inventory.txt):3030 >> "frontend/.env"
                       cat frontend/.env
+                      cat .circleci/ansible/inventory.txt
             - run:
                   name: Build frontend
                   command: |
