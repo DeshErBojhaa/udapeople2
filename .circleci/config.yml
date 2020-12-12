@@ -464,7 +464,6 @@ jobs:
                       --use-previous-template \
                       --stack-name "udapeople-cloudfront" \
                       --parameters ParameterKey=WorkflowID,ParameterValue=${CIRCLE_WORKFLOW_ID:0:7} \
-                      --tags project=udapeople
             # Here's where you will add some code to rollback on failure
             - revert-migrations
             - destroy-environment
