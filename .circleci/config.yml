@@ -337,12 +337,12 @@ jobs:
                   name: Get backend url
                   command: |
                       # your code here
-                      export BACKEND_IP=$(sed -n 2p .circleci/ansible/inventory.txt)
                       export API_URL="http://$(sed -n 2p .circleci/ansible/inventory.txt):3030"
-                      echo "${API_URL}"
+                      echo "http://$(sed -n 2p .circleci/ansible/inventory.txt):3030"
                       echo ENVIRONMENT=production > "frontend/.env"
                       echo NODE_ENV=production >> "frontend/.env"
-                      echo API_URL=$API_URL >> "frontend/.env"
+                      echo API_URL=http://$(sed -n 2p .circleci/ansible/inventory.txt):3030 >> "frontend/.env"
+                      cat frontend/.env
             - run:
                   name: Build frontend
                   command: |
